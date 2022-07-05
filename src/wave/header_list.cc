@@ -2,7 +2,7 @@
 
 namespace QWave {
 
-    HeaderList::Iterator::Iterator(QIODevice *stream, quint64 position)
+    HeaderList::Iterator::Iterator(QIODevice *stream, qint64 position)
         : stream_(stream), position_(position) {
     }
 
@@ -47,10 +47,7 @@ namespace QWave {
     }
 
     HeaderList::Iterator HeaderList::end() {
-        stream_.seekg(0, std::ios::end);
-        quint64 size = stream_.tellg();
-        stream_.seekg(0, std::ios::beg);
-        return HeaderList::Iterator(&stream_, size);
+        return HeaderList::Iterator(&stream_, stream_.size());
     }
 
     Header HeaderList::header(const QByteArray &header_id) {

@@ -33,7 +33,7 @@ namespace QWave {
 
     class File::Impl {
     public:
-        Error WriteHeader(quint64 data_size) {
+        Error WriteHeader(qint64 data_size) {
             if (!ostream.isOpen()) {
                 return kNotOpen;
             }
@@ -123,21 +123,21 @@ namespace QWave {
             return kNoError;
         }
 
-        quint64 current_sample_index() {
+        qint64 current_sample_index() {
             auto bits_per_sample = header.fmt.bits_per_sample;
             auto bytes_per_sample = bits_per_sample / 8;
-            quint64 data_index = 0;
+            qint64 data_index = 0;
             if (ostream.isOpen()) {
-                data_index = static_cast<quint64>(ostream.pos()) - data_offset_;
+                data_index = static_cast<qint64>(ostream.pos()) - data_offset_;
             } else if (istream.isOpen()) {
-                data_index = static_cast<quint64>(istream.pos()) - data_offset_;
+                data_index = static_cast<qint64>(istream.pos()) - data_offset_;
             } else {
                 return 0;
             }
             return data_index / bytes_per_sample;
         }
 
-        void set_current_sample_index(quint64 sample_idx) {
+        void set_current_sample_index(qint64 sample_idx) {
             auto bits_per_sample = header.fmt.bits_per_sample;
             auto bytes_per_sample = bits_per_sample / 8;
 
@@ -149,7 +149,7 @@ namespace QWave {
             }
         }
 
-        quint64 sample_number() {
+        qint64 sample_number() {
             auto bits_per_sample = header.fmt.bits_per_sample;
             auto bytes_per_sample = bits_per_sample / 8;
 
@@ -161,7 +161,7 @@ namespace QWave {
         QFile ostream;
 
         WAVEHeader header;
-        quint64 data_offset_;
+        qint64 data_offset_;
     };
 
     File::File()
@@ -202,6 +202,7 @@ namespace QWave {
     quint16 File::channel_number() const {
         return impl_->header.fmt.num_channel;
     }
+
     void File::set_channel_number(quint16 channel_number) {
         impl_->header.fmt.num_channel = channel_number;
     }
@@ -220,7 +221,7 @@ namespace QWave {
         impl_->header.fmt.bits_per_sample = bits_per_sample;
     }
 
-    quint64 File::frame_number() const {
+    qint64 File::frame_number() const {
         return impl_->sample_number() / channel_number();
     }
 
@@ -232,11 +233,11 @@ namespace QWave {
         return Read(frame_number(), decrypt, output);
     }
 
-    Error File::Read(quint64 frame_number, QVector<float> *output) {
+    Error File::Read(qint64 frame_number, QVector<float> *output) {
         return Read(frame_number, internal::NoDecrypt, output);
     }
 
-    Error File::Read(quint64 frame_number, void (*decrypt)(char *, size_t),
+    Error File::Read(qint64 frame_number, void (*decrypt)(char *, size_t),
                      QVector<float> *output) {
         if (!impl_->istream.isOpen()) {
             return kNotOpen;
@@ -356,7 +357,7 @@ namespace QWave {
         return kNoError;
     }
 
-    Error File::Seek(quint64 frame_index) {
+    Error File::Seek(qint64 frame_index) {
         if (!impl_->ostream.isOpen() && !impl_->istream.isOpen()) {
             return kNotOpen;
         }
@@ -368,7 +369,7 @@ namespace QWave {
         return kNoError;
     }
 
-    quint64 File::Tell() const {
+    qint64 File::Tell() const {
         if (!impl_->ostream.isOpen() && !impl_->istream.isOpen()) {
             return 0;
         }
@@ -416,7 +417,7 @@ namespace QWave {
         return output;
     }
 
-    QVector<float> File::Read(quint64 frame_number, std::error_code &err) {
+    QVector<float> File::Read(qint64 frame_number, std::error_code &err) {
         QVector<float> output;
         auto wave_error = Read(frame_number, &output);
         err = make_error_code(wave_error);

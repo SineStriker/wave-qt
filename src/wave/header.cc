@@ -3,7 +3,7 @@
 #include "wave/header/riff_header.h"
 
 namespace QWave {
-    Error Header::Init(QIODevice *stream, quint64 position) {
+    Error Header::Init(QIODevice *stream, qint64 position) {
         position_ = position;
         if (!stream->isOpen()) {
             return Error::kNotOpen;
@@ -34,7 +34,7 @@ namespace QWave {
         return size_;
     }
 
-    quint64 Header::position() const {
+    qint64 Header::position() const {
         return position_;
     }
 }; // namespace wave

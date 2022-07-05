@@ -12,7 +12,7 @@ namespace QWave {
     public:
         class Iterator {
         public:
-            Iterator(QIODevice *stream, quint64 position);
+            Iterator(QIODevice *stream, qint64 position);
             Iterator operator++();
             Iterator operator++(int);
             Header operator*();
@@ -21,7 +21,7 @@ namespace QWave {
 
         private:
             QIODevice *stream_;
-            quint64 position_;
+            qint64 position_;
         };
 
         Error Init(const QString &path);

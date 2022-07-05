@@ -35,14 +35,14 @@ namespace QWave {
          * @note: File has to be opened in kOut mode or kNotOpen will be returned.
          * If file is too small, kInvalidFormat is returned
          */
-        Error Read(quint64 frame_number, QVector<float> *output);
+        Error Read(qint64 frame_number, QVector<float> *output);
 
         /**
          * @brief Read and decrypt the entire content of file.
          * @note: File has to be opened in kOut mode or kNotOpen will be returned
          */
         Error Read(void (*decrypt)(char *data, size_t size), QVector<float> *output);
-        Error Read(quint64 frame_number, void (*decrypt)(char *data, size_t size),
+        Error Read(qint64 frame_number, void (*decrypt)(char *data, size_t size),
                    QVector<float> *output);
 
         /**
@@ -65,12 +65,12 @@ namespace QWave {
         /**
          * Move to the given frame in the file
          */
-        Error Seek(quint64 frame_index);
+        Error Seek(qint64 frame_index);
 
         /**
          * Give the current frame position in the file
          */
-        quint64 Tell() const;
+        qint64 Tell() const;
 
 #if __cplusplus >= 201103L
         // C++ 11 available
@@ -83,7 +83,7 @@ namespace QWave {
 
         // TODO: add std::function version of Read and Write with encrypted
         QVector<float> Read(std::error_code &err);
-        QVector<float> Read(quint64 frame_number, std::error_code &err);
+        QVector<float> Read(qint64 frame_number, std::error_code &err);
         /**
          * @brief Write the given data
          * @param clip : if true, hard-clip (force value between -1. and 1.) before writing,
@@ -104,7 +104,7 @@ namespace QWave {
         quint16 bits_per_sample() const;
         void set_bits_per_sample(quint16 bits_per_sample);
 
-        quint64 frame_number() const;
+        qint64 frame_number() const;
 
     private:
         class Impl;
