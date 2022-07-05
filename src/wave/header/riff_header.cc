@@ -1,13 +1,12 @@
 #include "wave/header/riff_header.h"
 
-#include <cstring>
+#include <QString>
 
-namespace wave {
+namespace QWave {
 
-RIFFHeader MakeRIFFHeader() {
-  RIFFHeader header;
-  strncpy(header.chunk_id, "RIFF", 4);
-  strncpy(header.format, "WAVE", 4);
-  return header;
-}
-}  // namespace wave
+    RIFFHeader::RIFFHeader() {
+        qstrncpy(chunk_id, "RIFF", 4);
+        qstrncpy(format, "WAVE", 4);
+    }
+
+} // namespace wave

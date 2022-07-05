@@ -1,22 +1,31 @@
-add_library(wave
-  ${src}/wave/header/data_header.h
-  ${src}/wave/header/data_header.cc
-  ${src}/wave/header/riff_header.h
-  ${src}/wave/header/riff_header.cc
-  ${src}/wave/header/fmt_header.h
-  ${src}/wave/header/fmt_header.cc
-  ${src}/wave/header/wave_header.h
-  ${src}/wave/header/wave_header.cc
+list(APPEND sources
+    ${src}/wave/header/data_header.h
+    ${src}/wave/header/data_header.cc
+    ${src}/wave/header/riff_header.h
+    ${src}/wave/header/riff_header.cc
+    ${src}/wave/header/fmt_header.h
+    ${src}/wave/header/fmt_header.cc
+    ${src}/wave/header/wave_header.h
+    ${src}/wave/header/wave_header.cc
 
-  ${src}/wave/header.h
-  ${src}/wave/header.cc
-  ${src}/wave/header_list.h
-  ${src}/wave/header_list.cc
+    ${src}/wave/header.h
+    ${src}/wave/header.cc
+    ${src}/wave/header_list.h
+    ${src}/wave/header_list.cc
 
-  ${src}/wave/error.h
-  ${src}/wave/file.h
-  ${src}/wave/file.cc
-)
+    ${src}/wave/error.h
+    ${src}/wave/file.h
+    ${src}/wave/file.cc
+    )
+
+if (build_static)
+    add_library(wave STATIC ${sources})
+    target_compile_definitions(wave PRIVATE WAVE_BUILD_STATIC)
+else()
+    add_library(wave SHARED ${sources})
+endif()
+target_compile_definitions(wave PRIVATE WAVE_LIBRARY)
+target_link_libraries(wave PUBLIC ${QT_LIBS})
 
 # include path
 target_include_directories(wave

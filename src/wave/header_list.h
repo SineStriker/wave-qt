@@ -1,40 +1,44 @@
 #ifndef WAVE_WAVE_HEADER_LIST_H_
 #define WAVE_WAVE_HEADER_LIST_H_
 
-#include <fstream>
+#include <QFile>
 
-#include "wave/header.h"
 #include "wave/error.h"
+#include "wave/header.h"
 
-namespace wave {
+namespace QWave {
 
-class HeaderList {
- public:
-  class Iterator {
-   public:
-    Iterator(std::ifstream* stream, uint64_t position);
-    Iterator operator++();
-    Iterator operator++(int);
-    Header operator*();
-    bool operator==(const Iterator& rhs);
-    bool operator!=(const Iterator& rhs);
-   private:
-    std::ifstream* stream_;
-    uint64_t position_;
-  };
+    class WAVE_API HeaderList {
+    public:
+        class Iterator {
+        public:
+            Iterator(QIODevice *stream, quint64 position);
+            Iterator operator++();
+            Iterator operator++(int);
+            Header operator*();
+            bool operator==(const Iterator &rhs);
+            bool operator!=(const Iterator &rhs);
 
-  Error Init(const std::string& path);
-  Iterator begin();
-  Iterator end();
-  
-  Header riff();
-  Header fmt();
-  Header data();
-  
- private:
-  Header header(const std::string& header_id);
-  std::ifstream stream_;
-};
-}  // namespace wave
+        private:
+            QIODevice *stream_;
+            quint64 position_;
+        };
 
-#endif  // WAVE_WAVE_HEADER_LIST_H_
+        Error Init(const QString &path);
+
+        Iterator begin();
+        Iterator end();
+
+        Header riff();
+        Header fmt();
+        Header data();
+
+    private:
+        Header header(const QByteArray &header_id);
+
+        QFile stream_;
+    };
+
+} // namespace wave
+
+#endif // WAVE_WAVE_HEADER_LIST_H_

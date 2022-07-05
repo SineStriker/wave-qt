@@ -1,26 +1,27 @@
 #ifndef WAVE_WAVE_HEADER_H_
 #define WAVE_WAVE_HEADER_H_
 
-#include <fstream>
-#include <cstdint>
+#include <QByteArray>
+#include <QFile>
 
 #include "wave/error.h"
 
-namespace wave {
+namespace QWave {
 
-class Header {
- public:
-  Error Init(std::ifstream* stream, uint64_t position);
-  std::string chunk_id() const;
-  uint32_t chunk_size() const;
-  uint64_t position() const;
+    class WAVE_API Header {
+    public:
+        Error Init(QIODevice *stream, quint64 position);
 
- private:
-  std::string id_;
-  uint32_t size_;
-  uint64_t position_;
-};
-  
-}  // namespace wave
+        QByteArray chunk_id() const;
+        quint32 chunk_size() const;
+        quint64 position() const;
 
-#endif  // WAVE_WAVE_HEADER_H_
+    private:
+        QByteArray id_;
+        quint32 size_;
+        quint64 position_;
+    };
+
+} // namespace wave
+
+#endif // WAVE_WAVE_HEADER_H_

@@ -5,15 +5,16 @@
 #include "wave/header/fmt_header.h"
 #include "wave/header/riff_header.h"
 
-namespace wave {
+namespace QWave {
 
-struct WAVEHeader {
-  RIFFHeader riff;
-  FMTHeader fmt;
-  DataHeader data;
-};
-WAVEHeader MakeWAVEHeader();
+    struct WAVE_API WAVEHeader {
+        RIFFHeader riff;
+        FMTHeader fmt;
+        DataHeader data;
 
-}  // namespace wave
+        WAVEHeader();
+    };
 
-#endif  // WAVE_HEADER_WAVE_HEADER_H_
+} // namespace wave
+
+#endif // WAVE_HEADER_WAVE_HEADER_H_
