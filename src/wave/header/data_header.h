@@ -5,13 +5,13 @@
 
 namespace QWave {
 
-    struct WAVE_API DataHeader {
+    struct DataHeader {
         char sub_chunk_2_id[4];
         quint32 sub_chunk_2_size;
-
-        DataHeader();
     };
 
-} // namespace wave
+    DataHeader WAVE_API MakeDataHeader();
+
+} // namespace QWave
 
 #endif // WAVE_HEADER_DATA_HEADER_H_

@@ -5,7 +5,7 @@
 
 namespace QWave {
 
-    struct WAVE_API FMTHeader {
+    struct FMTHeader {
         char sub_chunk_1_id[4];
         quint32 sub_chunk_1_size;
         quint16 audio_format;
@@ -14,9 +14,9 @@ namespace QWave {
         quint32 byte_rate;
         quint16 byte_per_block;
         quint16 bits_per_sample;
-
-        FMTHeader();
     };
+
+    FMTHeader WAVE_API MakeFMTHeader();
 
 } // namespace wave
 

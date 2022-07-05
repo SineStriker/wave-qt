@@ -2,7 +2,12 @@
 
 namespace QWave {
 
-    WAVEHeader::WAVEHeader() {
+    WAVEHeader MakeWAVEHeader() {
+        WAVEHeader header;
+        header.riff = MakeRIFFHeader();
+        header.fmt = MakeFMTHeader();
+        header.data = MakeDataHeader();
+        return header;
     }
 
-} // namespace wave
+} // namespace QWave

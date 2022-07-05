@@ -1,5 +1,6 @@
 #include "wave/file.h"
 
+#include <QDebug>
 #include <QFile>
 
 #include "wave/header/data_header.h"
@@ -37,6 +38,7 @@ namespace QWave {
             if (!ostream.isOpen()) {
                 return kNotOpen;
             }
+
             auto original_position = ostream.pos();
             // Position to beginning of file
             ostream.seek(0);
@@ -54,8 +56,10 @@ namespace QWave {
             // data header
             header.data.sub_chunk_2_size = data_size * bytes_per_sample;
 
-            ostream.write(reinterpret_cast<char *>(&header), sizeof(WAVEHeader));
-            if (!ostream.waitForBytesWritten(3000)) {
+            qDebug() << QByteArray((char *) (&header), sizeof(header)).toHex();
+
+            auto cnt = ostream.write(reinterpret_cast<char *>(&header), sizeof(WAVEHeader));
+            if (cnt != sizeof(WAVEHeader)) {
                 return kWriteError;
             }
 
@@ -166,7 +170,7 @@ namespace QWave {
 
     File::File()
         : impl_(new Impl()) {
-        impl_->header = WAVEHeader(); // Use Constructor
+        impl_->header = MakeWAVEHeader(); // Use Constructor
     }
     File::~File() {
         if (impl_ != nullptr && impl_->istream.isOpen()) {
@@ -175,12 +179,15 @@ namespace QWave {
     }
 
     Error File::Open(const QString &path, OpenMode mode) {
+        return Error::kFailedToOpen;
         // Write
         if (mode == OpenMode::kOut) {
+            qDebug() << "Out Mode";
             impl_->ostream.setFileName(path);
             if (!impl_->ostream.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
                 return Error::kFailedToOpen;
             }
+            qDebug() << "Write Header";
             return impl_->WriteHeader(0);
         }
 
@@ -237,8 +244,7 @@ namespace QWave {
         return Read(frame_number, internal::NoDecrypt, output);
     }
 
-    Error File::Read(qint64 frame_number, void (*decrypt)(char *, size_t),
-                     QVector<float> *output) {
+    Error File::Read(qint64 frame_number, void (*decrypt)(char *, size_t), QVector<float> *output) {
         if (!impl_->istream.isOpen()) {
             return kNotOpen;
         }
@@ -255,11 +261,11 @@ namespace QWave {
         for (int sample_idx = 0; sample_idx < output->size(); sample_idx++) {
             if (impl_->header.fmt.bits_per_sample == 8) {
                 // 8bits case
-                int8_t value;
+                qint8 value;
                 impl_->istream.read(reinterpret_cast<char *>(&value), sizeof(value));
                 decrypt(reinterpret_cast<char *>(&value), sizeof(value) / sizeof(char));
                 (*output)[sample_idx] =
-                    static_cast<float>(value) / std::numeric_limits<int8_t>::max();
+                    static_cast<float>(value) / std::numeric_limits<qint8>::max();
             } else if (impl_->header.fmt.bits_per_sample == 16) {
                 // 16 bits
                 qint16 value;
@@ -321,7 +327,7 @@ namespace QWave {
             }
             if (bits_per_sample == 8) {
                 // 8bits case
-                int8_t value = static_cast<int8_t>(sample * std::numeric_limits<int8_t>::max());
+                qint8 value = static_cast<qint8>(sample * std::numeric_limits<qint8>::max());
                 encrypt(reinterpret_cast<char *>(&value), sizeof(value) / sizeof(char));
                 impl_->ostream.write(reinterpret_cast<char *>(&value), sizeof(value));
             } else if (bits_per_sample == 16) {
@@ -333,7 +339,7 @@ namespace QWave {
                 // 24bits int doesn't exist in c++. We create a 3 * 8bits struct to
                 // simulate
                 int v = sample * INT24_MAX;
-                int8_t value[3];
+                qint8 value[3];
                 value[0] = reinterpret_cast<char *>(&v)[0];
                 value[1] = reinterpret_cast<char *>(&v)[1];
                 value[2] = reinterpret_cast<char *>(&v)[2];
@@ -436,4 +442,4 @@ namespace QWave {
 
 #endif // __cplusplus > 199711L
 
-} // namespace wave
+} // namespace QWave

@@ -4,9 +4,11 @@
 
 namespace QWave {
 
-    RIFFHeader::RIFFHeader() {
-        qstrncpy(chunk_id, "RIFF", 4);
-        qstrncpy(format, "WAVE", 4);
+    RIFFHeader MakeRIFFHeader() {
+        RIFFHeader header;
+        memcpy(header.chunk_id, "RIFF", 4);
+        memcpy(header.format, "WAVE", 4);
+        return header;
     }
 
-} // namespace wave
+} // namespace QWave

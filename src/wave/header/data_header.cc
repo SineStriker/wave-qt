@@ -4,8 +4,10 @@
 
 namespace QWave {
 
-    DataHeader::DataHeader() {
-        qstrncpy(sub_chunk_2_id, "data", 4);
+    DataHeader MakeDataHeader() {
+        DataHeader header;
+        memcpy(header.sub_chunk_2_id, "data", 4);
+        return header;
     }
 
-} // namespace wave
+} // namespace QWave

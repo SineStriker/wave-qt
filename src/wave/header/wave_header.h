@@ -7,13 +7,13 @@
 
 namespace QWave {
 
-    struct WAVE_API WAVEHeader {
+    struct WAVEHeader {
         RIFFHeader riff;
         FMTHeader fmt;
         DataHeader data;
-
-        WAVEHeader();
     };
+
+    WAVEHeader WAVE_API MakeWAVEHeader();
 
 } // namespace wave
 
